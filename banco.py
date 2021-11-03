@@ -3,7 +3,7 @@
 import sqlite3
 
 class Banco:
-    def __init_(self, arquivo):
+    def __init__(self, arquivo):
         self.conn = sqlite3.connect(arquivo)
         self.cursor = self.conn.cursor()
 
