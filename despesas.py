@@ -14,6 +14,10 @@ class Despesa:
         self.banco.cursor.execute(consulta, (self.data, self.descricao, self.valor))
         self.banco.conn.commit()
 
+    """Para editar uma despesa crie uma nova despesa e chame o método editar despesa passando o id da
+    despesa que deverá ser alterado como argumento. Na gui deve ser criado um objeto Despesa com os dados
+    da atualização e em vez de solicitar a inserção da despesa, vou solicitar a edição da despesa passando
+    o id como argumento."""
     def editar_despesa(self, id):
        consulta = 'UPDATE OR IGNORE despesas SET data=?, descricao=?, valor=? WHERE id=?'
        self.banco.cursor.execute(consulta, (self.data, self.descricao, self.valor, id))
@@ -32,6 +36,7 @@ class Despesa:
 
 
 if __name__ == '__main__':
-    despesa1 = Despesa('06/04/20', 'Carnes', 22.40)
-    despesa1.inserir_despesa()
-    despesa1.listar_despesas()
+    despesa1 = Despesa('08/04/21', 'Meia', 3.40)
+    #despesa1.inserir_despesa()
+    #despesa1.editar_despesa(4)
+    #despesa1.listar_despesas()
