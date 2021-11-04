@@ -22,8 +22,10 @@ class Manipulador:
 
     def atualizar_orcamento(self, orcamento):
         resumo = Resumo(self.banco)
-        print(resumo.saldo_dia)
-
+        builder.get_object('lbl_valor_gasto_realizado').set_text(str(f'R$ {resumo.gasto:.2f}').replace('.',','))
+        builder.get_object('lbl_saldo_dia').set_text(str(f'R$ {resumo.saldo_dia:.2f}').replace('.',','))
+        builder.get_object('lbl_media_por_dia').set_text(str(f'R$ {resumo.media_dia:.2f}').replace('.',','))
+        builder.get_object('lbl_valor_saldo_disp').set_text(str(f'R$ {resumo.saldo_disponivel:.2f}').replace('.',','))
 
 builder = Gtk.Builder()
 builder.add_from_file('ui.glade')
