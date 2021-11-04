@@ -4,12 +4,10 @@ from banco import Banco
 import sqlite3
 
 class Resumo:
-    def __init__(self, gasto, saldo_dia, media_dia, saldo_disponivel):
-        self.gasto = gasto
-        self.saldo_dia = saldo_dia
-        self.media_dia = media_dia
-        self.saldo_disponivel = saldo_disponivel
+    def __init__(self):
         self.banco = Banco('bancodedados.db')
+        resultado = self.buscar_resumo()
+        return resultado
 
     def inserir_resumo(self):
         consulta = 'INSERT OR IGNORE INTO resumo (gasto, saldo_dia, media_dia, saldo_disponivel) VALUES ( ?, ?, ?, ?)'
@@ -28,12 +26,12 @@ class Resumo:
 
     def buscar_resumo(self):
         self.banco.cursor.execute('SELECT * FROM resumo WHERE id=1')
-        for linha in self.banco.cursor.fetchall():
-            print(linha)
+        for identificador, gasto, saldo_dia, media_dia, saldo_disponivel in self.banco.cursor.fetchall():
+            return identificador, gasto, saldo_dia, media_dia, saldo_disponivel
 
 
 if __name__ == '__main__':
-    resumo = Resumo(14.5, 43.4, 0.0, 11.11)
+    resumo = Resumo()
     # resumo.inserir_resumo()
-    resumo.enviar_resumo(1)
-    resumo.buscar_resumo()
+    # resumo.enviar_resumo(1)
+    # resumo.buscar_resumo()
