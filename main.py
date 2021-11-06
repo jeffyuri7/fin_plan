@@ -12,13 +12,14 @@ from gi.repository import Gtk
 
 class Manipulador:
     def __init__(self):
+        # Inicializador do Manipulador. Os dados de resumo e a lista de despesas são inicializadas e escritas na tela neste momento.
         self.armazenamento: Gtk.ListStore = builder.get_object('liststore1')
         self.Stack: Gtk.Stack = builder.get_object('stack')
         self.banco = Banco('bancodedados.db')
-        # Atualiza os dados de resumo e a lista de despesas no momento da abertura do software
         self.atualizar_tela()
 
     def on_main_window_destroy(self, window):
+        # Função para fechar a aplicação quando clicar no X da janela
         self.banco.fechar()
         Gtk.main_quit()
 
@@ -48,8 +49,8 @@ class Manipulador:
 
         return soma_despesas, saldo_restante, media_por_dia
 
-    # Atualiza a tela com os dados que foram buscados do BD.
     def formatar_dados(self):
+        # Atualiza a tela com os dados que foram buscados do BD.
         builder.get_object('lbl_valor_gasto_realizado').set_text(str(f'R$ {self.resumo.gasto:.2f}').replace('.',','))
         builder.get_object('lbl_saldo_restante').set_text(str(f'R$ {self.resumo.saldo_dia:.2f}').replace('.',','))
         builder.get_object('lbl_media_por_dia').set_text(str(f'R$ {self.resumo.media_dia:.2f}').replace('.',','))
@@ -58,20 +59,27 @@ class Manipulador:
         for despesa in self.lista_despesas:
             self.armazenamento.append((despesa[1], despesa[2], str(f'R$ {despesa[3]:.2f}').replace('.',',')))
 
+
+    # Funções referentes aos pressionamentos de botões
+
     def on_btn_inserir_orcamento_clicked(self, button):
+        # Função que permite inserir um valor para o orçamento desejado do mês
         orcamento = builder.get_object('ent_valor_disp').get_text()
         self.resumo.atualizar_orcamento(float(orcamento), 1)
         self.atualizar_tela()
         builder.get_object('ent_valor_disp').set_text('')
 
     def on_btn_adicionar_clicked(self, button):
+        # Função para abrir a tela Adicionar Despesa
         self.Stack.set_visible_child_name('view_adicionar')
         builder.get_object('ent_data').grab_focus()
 
     def on_btn_cancelar_clicked(self, button):
+        # Função para retornar da tela Adicionar Despesa para a tela principal do software
         self.Stack.set_visible_child_name('view_principal')
 
     def on_btn_adicionar_confirmar_clicked(self, button):
+        # Função para confirmar e commitar uma nova despesa. Após isso, os dados são atualizados
         builder.get_object('ent_data').grab_focus()
         data = builder.get_object('ent_data').get_text()
         descricao = builder.get_object('ent_descricao').get_text()
@@ -86,18 +94,22 @@ class Manipulador:
 
 
     def on_btn_editar_clicked(self):
+        # Função para editar uma despesa que já está no BD
         pass
 
     def on_btn_excluir_clicked(self, button):
+        # Função para excluir uma despesa que já está no BD
         selecao = builder.get_object('treeview_princ').get_selection()
         selecao.connect("changed", on_tree_selection_changed)
 
     def on_tree_selection_changed(self, selection):
+        # Função para obter os dados selecionados de uma treeview
         model, treeiter = selection.get_selected()
         if treeiter is not None:
             print('Você selecionou', model[treeiter][0])
 
     def on_btn_zerar_clicked(self):
+        # Função para zerar os dados do BD. Útil para iniciar um novo mês com um novo orçamento
         pass
 
 builder = Gtk.Builder()
