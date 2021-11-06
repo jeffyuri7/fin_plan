@@ -3,6 +3,7 @@
 from banco import Banco
 
 class ListaDespesa:
+    # Uma classe para gerar um objeto ListaDespesa para ser utilizado na GUI
     def __init__(self, banco):
         self.banco = banco
         self.lista_de_dados = self.listar_despesas()
@@ -16,6 +17,7 @@ class ListaDespesa:
         return lista_despesas
 
 class Despesa:
+    # Uma classe para adicionar novos objetos Despesa no banco de dados
     def __init__(self, banco, data, descricao, valor):
         self.banco = banco
         self.data = data

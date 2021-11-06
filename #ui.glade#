@@ -15,6 +15,7 @@
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Planejamento Financeiro Mensal</property>
+    <property name="default-height">800</property>
     <property name="icon">static/images/dinheiro_peq.png</property>
     <signal name="destroy" handler="on_main_window_destroy" swapped="no"/>
     <child>
@@ -133,18 +134,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="ent_valor_disp">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="placeholder-text" translatable="yes">Insira o valor em R$</property>
-                    <signal name="button-press-event" handler="on_ent_valor_disp_button_press_event" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left-attach">3</property>
-                    <property name="top-attach">1</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkButton" id="btn_inserir_orcamento">
                     <property name="label" translatable="yes">Inserir Orçamento</property>
                     <property name="visible">True</property>
@@ -225,6 +214,17 @@ por Dia</property>
                   <packing>
                     <property name="left-attach">1</property>
                     <property name="top-attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="ent_valor_disp">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="placeholder-text" translatable="yes">Insira o valor em R$</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">3</property>
+                    <property name="top-attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -354,6 +354,7 @@ por Dia</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <signal name="clicked" handler="on_btn_editar_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -439,7 +440,6 @@ por Dia</property>
                     <property name="width-request">100</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
-                    <property name="input-purpose">digits</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
