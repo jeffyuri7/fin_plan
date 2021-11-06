@@ -15,6 +15,11 @@ class Resumo:
             self.media_dia = media_dia
             self.saldo_disponivel = saldo_disponivel
 
+    def atualizar_orcamento(self, orcamento, identificador):
+        consulta = 'UPDATE resumo SET saldo_disponivel=? WHERE id=?'
+        self.banco.cursor.execute(consulta, (orcamento, identificador))
+        self.banco.conn.commit()
+
     def inserir_resumo(self):
         consulta = 'INSERT OR IGNORE INTO resumo (gasto, saldo_dia, media_dia, saldo_disponivel) VALUES ( ?, ?, ?, ?)'
         self.banco.cursor.execute(consulta, (self.gasto, self.saldo_dia, self.media_dia, self.saldo_disponivel))
