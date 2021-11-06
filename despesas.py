@@ -2,10 +2,25 @@
 
 from banco import Banco
 
-class Despesa:
+class ListaDespesa:
     def __init__(self, banco):
         self.banco = banco
         self.lista_de_dados = self.listar_despesas()
+
+    # Não será impresso em linha de comando, portanto é necessário refatorar essa função.
+    def listar_despesas(self):
+        lista_despesas = []
+        self.banco.cursor.execute('SELECT * FROM despesas')
+        for linha in self.banco.cursor.fetchall():
+            lista_despesas.append(linha)
+        return lista_despesas
+
+class Despesa:
+    def __init__(self, banco, data, descricao, valor):
+        self.banco = banco
+        self.data = data
+        self.descricao = descricao
+        self.valor = valor
 
     def inserir_despesa(self):
         consulta = 'INSERT OR IGNORE INTO despesas (data, descricao, valor) VALUES ( ?, ?, ?)'
@@ -25,15 +40,6 @@ class Despesa:
         consulta = 'DELETE FROM despesas WHERE id=?'
         self.banco.cursor.execute(consulta, (id,))
         self.banco.conn.commit()
-
-    # Não será impresso em linha de comando, portanto é necessário refatorar essa função.
-    def listar_despesas(self):
-        lista_despesas = []
-        self.banco.cursor.execute('SELECT * FROM despesas')
-        for linha in self.banco.cursor.fetchall():
-            lista_despesas.append(linha)
-        return lista_despesas
-
 
 if __name__ == '__main__':
     despesa1 = Despesa(Banco('bancodedados.db'))
