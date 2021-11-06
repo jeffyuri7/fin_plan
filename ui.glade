@@ -15,7 +15,7 @@
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Planejamento Financeiro Mensal</property>
-    <property name="default-height">800</property>
+    <property name="default-height">768</property>
     <property name="icon">static/images/dinheiro_peq.png</property>
     <signal name="destroy" handler="on_main_window_destroy" swapped="no"/>
     <child>
@@ -220,7 +220,6 @@ por Dia</property>
                   <object class="GtkEntry" id="ent_valor_disp">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
-                    <property name="activates-default">True</property>
                     <property name="placeholder-text" translatable="yes">Insira o valor em R$</property>
                   </object>
                   <packing>
@@ -271,7 +270,7 @@ por Dia</property>
               </packing>
             </child>
             <child>
-              <object class="GtkTreeView">
+              <object class="GtkTreeView" id="treeview_princ">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="model">liststore1</property>
