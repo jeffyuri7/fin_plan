@@ -3,11 +3,9 @@
 from banco import Banco
 
 class Despesa:
-    def __init__(self, data, descricao, valor):
-        self.data = data
-        self.descricao = descricao
-        self.valor = valor
-        self.banco = Banco('bancodedados.db')
+    def __init__(self, banco):
+        self.banco = banco
+        self.lista_de_dados = self.listar_despesas()
 
     def inserir_despesa(self):
         consulta = 'INSERT OR IGNORE INTO despesas (data, descricao, valor) VALUES ( ?, ?, ?)'
@@ -30,13 +28,15 @@ class Despesa:
 
     # Não será impresso em linha de comando, portanto é necessário refatorar essa função.
     def listar_despesas(self):
+        lista_despesas = []
         self.banco.cursor.execute('SELECT * FROM despesas')
         for linha in self.banco.cursor.fetchall():
-            print(linha)
+            lista_despesas.append(linha)
+        return lista_despesas
 
 
 if __name__ == '__main__':
-    despesa1 = Despesa('08/04/21', 'Meia', 3.40)
-    #despesa1.inserir_despesa()
+    despesa1 = Despesa(Banco('bancodedados.db'))
+    print(despesa1.lista_de_dados)
     #despesa1.editar_despesa(4)
     #despesa1.listar_despesas()
