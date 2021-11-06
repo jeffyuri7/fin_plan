@@ -16,6 +16,8 @@ class Manipulador:
         self.armazenamento: Gtk.ListStore = builder.get_object('liststore1')
         self.Stack: Gtk.Stack = builder.get_object('stack')
         self.banco = Banco('bancodedados.db')
+        self.resumo = None
+        self.lista_despesas = None
         self.atualizar_tela()
 
     def on_main_window_destroy(self, window):
@@ -34,10 +36,10 @@ class Manipulador:
         # Consulta o banco de dados e cria dois objetos: um resumo e uma lista de despesas
         self.resumo = Resumo(self.banco)
         self.lista_despesas = ListaDespesa(self.banco).lista_de_dados
-        self.calcular_dados()
         self.formatar_dados()
+        print('gerado agora')
 
-    def calcular_dados(self):
+    def calcular_resumo(self, orcamento):
         # Calcula os dados de lista para atualizar o resumo
         soma_despesas = 0
         for despesa in self.lista_despesas:
@@ -46,8 +48,9 @@ class Manipulador:
         periodo = self.mes_atual()
         dias_restantes = (periodo[1] - periodo[0]) + 1
         media_por_dia = saldo_restante / dias_restantes
-
-        return soma_despesas, saldo_restante, media_por_dia
+        print(soma_despesas, saldo_restante, media_por_dia, orcamento, 1)
+        self.resumo.enviar_resumo(soma_despesas, saldo_restante, media_por_dia, orcamento, 1)
+        self.atualizar_tela()
 
     def formatar_dados(self):
         # Atualiza a tela com os dados que foram buscados do BD.
@@ -65,8 +68,7 @@ class Manipulador:
     def on_btn_inserir_orcamento_clicked(self, button):
         # Função que permite inserir um valor para o orçamento desejado do mês
         orcamento = builder.get_object('ent_valor_disp').get_text()
-        self.resumo.atualizar_orcamento(float(orcamento), 1)
-        self.atualizar_tela()
+        self.calcular_resumo(float(orcamento))
         builder.get_object('ent_valor_disp').set_text('')
 
     def on_btn_adicionar_clicked(self, button):
@@ -89,7 +91,7 @@ class Manipulador:
         builder.get_object('ent_data').set_text('')
         builder.get_object('ent_descricao').set_text('')
         builder.get_object('ent_valor').set_text('')
-        self.atualizar_tela()
+        self.calcular_resumo(self.resumo.saldo_disponivel)
         self.Stack.set_visible_child_name('view_principal')
 
 
