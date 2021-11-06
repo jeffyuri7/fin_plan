@@ -5,11 +5,11 @@
   <object class="GtkListStore" id="liststore1">
     <columns>
       <!-- column-name Data -->
-      <column type="glong"/>
+      <column type="gchararray"/>
       <!-- column-name Descrição -->
       <column type="gchararray"/>
       <!-- column-name Valor -->
-      <column type="gint"/>
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkWindow" id="main_window">
