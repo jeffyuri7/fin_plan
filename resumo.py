@@ -20,15 +20,15 @@ class Resumo:
         self.banco.cursor.execute(consulta, (orcamento, identificador))
         self.banco.conn.commit()
 
-    def inserir_resumo(self):
+    def inserir_resumo(self, gasto, saldo_dia, media_dia, saldo_disponivel, identificador):
         consulta = 'INSERT OR IGNORE INTO resumo (gasto, saldo_dia, media_dia, saldo_disponivel) VALUES ( ?, ?, ?, ?)'
         self.banco.cursor.execute(consulta, (self.gasto, self.saldo_dia, self.media_dia, self.saldo_disponivel))
         self.banco.conn.commit()
 
     # Método para atualizar os dados no BD. Haverá apenas uma lista de dados nessa tabela.
-    def enviar_resumo(self, id):
-        consulta = 'UPDATE OR IGNORE resumo SET gasto=?, saldo_dia=?, media_dia=?, saldo_disponivel=? WHERE id=?'
-        self.banco.cursor.execute(consulta, (self.gasto, self.saldo_dia, self.media_dia, self.saldo_disponivel, id))
+    def enviar_resumo(self, gasto, saldo_dia, media_dia, saldo_disponivel, identificador):
+        consulta = 'UPDATE resumo SET gasto=?, saldo_dia=?, media_dia=?, saldo_disponivel=? WHERE id=?'
+        self.banco.cursor.execute(consulta, (gasto, saldo_dia, media_dia, saldo_disponivel, identificador))
         self.banco.conn.commit()
 
     # Método para atualizar o resumo direto no programa, para mostrar na GUI
