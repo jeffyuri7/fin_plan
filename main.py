@@ -16,43 +16,40 @@ class Manipulador:
         self.Stack: Gtk.Stack = builder.get_object('stack')
         self.banco = Banco('bancodedados.db')
         # Atualiza os dados de resumo e a lista de despesas no momento da abertura do software
-        self.buscar_dados()
-        data2 = self.ultimo_dia_mes()
-        print(data2)
-
+        self.atualizar_tela()
 
     def on_main_window_destroy(self, window):
         self.banco.fechar()
         Gtk.main_quit()
 
-    def ultimo_dia_mes(self):
+    def mes_atual(self):
+        # Uma função que retorna uma tupla com o dia atual e o último dia do mês ambos como int
         data = date.today()
         hoje = int(data.strftime('%d'))
         ultimo_dia = calendar.monthrange(int(data.strftime('%Y')), int(data.strftime('%m')))[1]
         return hoje, ultimo_dia
 
-    # Consulta o banco de dados e cria dois objetos: um resumo e uma lista de despesas
-    def buscar_dados(self):
+    def atualizar_tela(self):
+        # Consulta o banco de dados e cria dois objetos: um resumo e uma lista de despesas
         self.resumo = Resumo(self.banco)
         self.lista_despesas = ListaDespesa(self.banco).lista_de_dados
-        #self.calcular_dados()
-        self.atualizar_tela()
+        self.calcular_dados()
+        self.formatar_dados()
 
-    # Calcula os dados de lista para atualizar o resumo
     def calcular_dados(self):
+        # Calcula os dados de lista para atualizar o resumo
         soma_despesas = 0
         for despesa in self.lista_despesas:
            soma_despesas += despesa[3]
         saldo_restante = self.resumo.saldo_disponivel - soma_despesas
-        ultimo_dia = self.ultimo_dia_mes()
-        #hoje = TODO
-        #dias_restantes = ultimo_dia - hoje
-        #media_por_dia = saldo_restante / dias_restantes
+        periodo = self.mes_atual()
+        dias_restantes = (periodo[1] - periodo[0]) + 1
+        media_por_dia = saldo_restante / dias_restantes
 
-        return soma_despesas, saldo_restante
+        return soma_despesas, saldo_restante, media_por_dia
 
     # Atualiza a tela com os dados que foram buscados do BD.
-    def atualizar_tela(self):
+    def formatar_dados(self):
         builder.get_object('lbl_valor_gasto_realizado').set_text(str(f'R$ {self.resumo.gasto:.2f}').replace('.',','))
         builder.get_object('lbl_saldo_restante').set_text(str(f'R$ {self.resumo.saldo_dia:.2f}').replace('.',','))
         builder.get_object('lbl_media_por_dia').set_text(str(f'R$ {self.resumo.media_dia:.2f}').replace('.',','))
@@ -63,7 +60,9 @@ class Manipulador:
 
     def on_btn_inserir_orcamento_clicked(self, button):
         orcamento = builder.get_object('ent_valor_disp').get_text()
-        #self.atualizar_orcamento(orcamento)
+        self.resumo.atualizar_orcamento(float(orcamento), 1)
+        self.atualizar_tela()
+        builder.get_object('ent_valor_disp').set_text('')
 
     def on_btn_adicionar_clicked(self, button):
         self.Stack.set_visible_child_name('view_adicionar')
@@ -82,8 +81,7 @@ class Manipulador:
         builder.get_object('ent_data').set_text('')
         builder.get_object('ent_descricao').set_text('')
         builder.get_object('ent_valor').set_text('')
-        self.calcular_dados()
-        self.buscar_dados()
+        self.atualizar_tela()
         self.Stack.set_visible_child_name('view_principal')
 
 
