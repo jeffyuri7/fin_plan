@@ -435,10 +435,11 @@ por Dia</property>
                 <property name="row-spacing">10</property>
                 <property name="column-spacing">10</property>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="ent_data">
                     <property name="width-request">100</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="input-purpose">digits</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -446,7 +447,7 @@ por Dia</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="ent_descricao">
                     <property name="width-request">300</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
@@ -457,8 +458,8 @@ por Dia</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
-                    <property name="width-request">120</property>
+                  <object class="GtkEntry" id="ent_valor">
+                    <property name="width-request">100</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                   </object>
@@ -520,6 +521,7 @@ por Dia</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <signal name="clicked" handler="on_btn_adicionar_confirmar_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -533,6 +535,7 @@ por Dia</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <signal name="clicked" handler="on_btn_cancelar_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
