@@ -4,6 +4,8 @@ from banco import Banco
 from resumo import Resumo
 from despesas import Despesa, ListaDespesa
 import gi
+from datetime import date
+import calendar
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -14,19 +16,47 @@ class Manipulador:
         self.Stack: Gtk.Stack = builder.get_object('stack')
         self.banco = Banco('bancodedados.db')
         # Atualiza os dados de resumo e a lista de despesas no momento da abertura do software
-        self.atualizar_tela()
+        self.buscar_dados()
+        data2 = self.ultimo_dia_mes()
+        print(data2)
+
 
     def on_main_window_destroy(self, window):
         self.banco.fechar()
         Gtk.main_quit()
 
-    def atualizar_tela(self):
+    def ultimo_dia_mes(self):
+        data = date.today()
+        hoje = int(data.strftime('%d'))
+        ultimo_dia = calendar.monthrange(int(data.strftime('%Y')), int(data.strftime('%m')))[1]
+        return hoje, ultimo_dia
+
+    # Consulta o banco de dados e cria dois objetos: um resumo e uma lista de despesas
+    def buscar_dados(self):
         self.resumo = Resumo(self.banco)
-        builder.get_object('lbl_valor_gasto_realizado').set_text(str(f'R$ {self.resumo.gasto:.2f}').replace('.',','))
-        builder.get_object('lbl_saldo_dia').set_text(str(f'R$ {self.resumo.saldo_dia:.2f}').replace('.',','))
-        builder.get_object('lbl_media_por_dia').set_text(str(f'R$ {self.resumo.media_dia:.2f}').replace('.',','))
-        builder.get_object('lbl_valor_saldo_disp').set_text(str(f'R$ {self.resumo.saldo_disponivel:.2f}').replace('.',','))
         self.lista_despesas = ListaDespesa(self.banco).lista_de_dados
+        #self.calcular_dados()
+        self.atualizar_tela()
+
+    # Calcula os dados de lista para atualizar o resumo
+    def calcular_dados(self):
+        soma_despesas = 0
+        for despesa in self.lista_despesas:
+           soma_despesas += despesa[3]
+        saldo_restante = self.resumo.saldo_disponivel - soma_despesas
+        ultimo_dia = self.ultimo_dia_mes()
+        #hoje = TODO
+        #dias_restantes = ultimo_dia - hoje
+        #media_por_dia = saldo_restante / dias_restantes
+
+        return soma_despesas, saldo_restante
+
+    # Atualiza a tela com os dados que foram buscados do BD.
+    def atualizar_tela(self):
+        builder.get_object('lbl_valor_gasto_realizado').set_text(str(f'R$ {self.resumo.gasto:.2f}').replace('.',','))
+        builder.get_object('lbl_saldo_restante').set_text(str(f'R$ {self.resumo.saldo_dia:.2f}').replace('.',','))
+        builder.get_object('lbl_media_por_dia').set_text(str(f'R$ {self.resumo.media_dia:.2f}').replace('.',','))
+        builder.get_object('lbl_orcamento_previsto').set_text(str(f'R$ {self.resumo.saldo_disponivel:.2f}').replace('.',','))
         self.armazenamento.clear()
         for despesa in self.lista_despesas:
             self.armazenamento.append((despesa[1], despesa[2], str(f'R$ {despesa[3]:.2f}').replace('.',',')))
@@ -49,11 +79,13 @@ class Manipulador:
         valor = float(builder.get_object('ent_valor').get_text())
         nova_despesa = Despesa(self.banco, data, descricao, valor)
         nova_despesa.inserir_despesa()
-        self.Stack.set_visible_child_name('view_principal')
         builder.get_object('ent_data').set_text('')
         builder.get_object('ent_descricao').set_text('')
         builder.get_object('ent_valor').set_text('')
-        self.atualizar_tela()
+        self.calcular_dados()
+        self.buscar_dados()
+        self.Stack.set_visible_child_name('view_principal')
+
 
     def on_btn_editar_clicked(self):
         pass

@@ -126,7 +126,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Saldo Disponível</property>
+                    <property name="label" translatable="yes">Orçamento Previsto</property>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -160,7 +160,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="lbl_valor_saldo_disp">
+                  <object class="GtkLabel" id="lbl_orcamento_previsto">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">R$ 0,00</property>
@@ -187,7 +187,7 @@ por Dia</property>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Saldo do Dia</property>
+                    <property name="label" translatable="yes">Saldo Restante</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -195,7 +195,7 @@ por Dia</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="lbl_saldo_dia">
+                  <object class="GtkLabel" id="lbl_saldo_restante">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">R$ 0,00</property>
