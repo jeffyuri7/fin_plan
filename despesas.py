@@ -16,6 +16,17 @@ class ListaDespesa:
             lista_despesas.append(linha)
         return lista_despesas
 
+    def editar_despesa(self, identificador):
+       consulta = 'UPDATE OR IGNORE despesas SET data=?, descricao=?, valor=? WHERE id=?'
+       self.banco.cursor.execute(consulta, (self.data, self.descricao, self.valor, id))
+       self.banco.conn.commit()
+
+    def excluir_despesa(self, identificador):
+        consulta = 'DELETE FROM despesas WHERE id=?'
+        self.banco.cursor.execute(consulta, (identificador,))
+        self.banco.conn.commit()
+
+
 class Despesa:
     # Uma classe para adicionar novos objetos Despesa no banco de dados
     def __init__(self, banco, data, descricao, valor):
@@ -33,15 +44,6 @@ class Despesa:
     despesa que deverá ser alterado como argumento. Na gui deve ser criado um objeto Despesa com os dados
     da atualização e em vez de solicitar a inserção da despesa, vou solicitar a edição da despesa passando
     o id como argumento."""
-    def editar_despesa(self, id):
-       consulta = 'UPDATE OR IGNORE despesas SET data=?, descricao=?, valor=? WHERE id=?'
-       self.banco.cursor.execute(consulta, (self.data, self.descricao, self.valor, id))
-       self.banco.conn.commit()
-
-    def excluir_despesa(self, id):
-        consulta = 'DELETE FROM despesas WHERE id=?'
-        self.banco.cursor.execute(consulta, (id,))
-        self.banco.conn.commit()
 
 if __name__ == '__main__':
     despesa1 = Despesa(Banco('bancodedados.db'))
