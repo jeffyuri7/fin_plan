@@ -270,12 +270,12 @@ por Dia</property>
             </child>
             <child>
               <object class="GtkScrolledWindow">
+                <property name="height-request">200</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="treeview_princ">
-                    <property name="height-request">200</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="model">liststore1</property>
