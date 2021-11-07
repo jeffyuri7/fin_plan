@@ -19,6 +19,11 @@ class Manipulador:
         self.resumo = None
         self.lista_despesas = None
         self.atualizar_tela()
+        self.treeview = builder.get_object("treeview_princ")
+        select = self.treeview.get_selection()
+        select.connect("changed", self.on_tree_selection_changed)
+        self.objeto_selecionado = 0
+
 
     def on_main_window_destroy(self, window):
         # Função para fechar a aplicação quando clicar no X da janela
@@ -37,7 +42,6 @@ class Manipulador:
         self.resumo = Resumo(self.banco)
         self.lista_despesas = ListaDespesa(self.banco).lista_de_dados
         self.formatar_dados()
-        print('gerado agora')
 
     def calcular_resumo(self, orcamento):
         # Calcula os dados de lista para atualizar o resumo
@@ -48,7 +52,6 @@ class Manipulador:
         periodo = self.mes_atual()
         dias_restantes = (periodo[1] - periodo[0]) + 1
         media_por_dia = saldo_restante / dias_restantes
-        print(soma_despesas, saldo_restante, media_por_dia, orcamento, 1)
         self.resumo.enviar_resumo(soma_despesas, saldo_restante, media_por_dia, orcamento, 1)
         self.atualizar_tela()
 
@@ -60,14 +63,14 @@ class Manipulador:
         builder.get_object('lbl_orcamento_previsto').set_text(str(f'R$ {self.resumo.saldo_disponivel:.2f}').replace('.',','))
         self.armazenamento.clear()
         for despesa in self.lista_despesas:
-            self.armazenamento.append((despesa[1], despesa[2], str(f'R$ {despesa[3]:.2f}').replace('.',',')))
+            self.armazenamento.append((despesa[0], despesa[1], despesa[2], str(f'R$ {despesa[3]:.2f}').replace('.',',')))
 
 
     # Funções referentes aos pressionamentos de botões
 
     def on_btn_inserir_orcamento_clicked(self, button):
         # Função que permite inserir um valor para o orçamento desejado do mês
-        orcamento = builder.get_object('ent_valor_disp').get_text()
+        orcamento = (builder.get_object('ent_valor_disp').get_text()).replace(',','.').strip()
         self.calcular_resumo(float(orcamento))
         builder.get_object('ent_valor_disp').set_text('')
 
@@ -85,7 +88,7 @@ class Manipulador:
         builder.get_object('ent_data').grab_focus()
         data = builder.get_object('ent_data').get_text()
         descricao = builder.get_object('ent_descricao').get_text()
-        valor = float(builder.get_object('ent_valor').get_text())
+        valor = float((builder.get_object('ent_valor').get_text()).replace(',','.').strip())
         nova_despesa = Despesa(self.banco, data, descricao, valor)
         nova_despesa.inserir_despesa()
         builder.get_object('ent_data').set_text('')
@@ -101,14 +104,19 @@ class Manipulador:
 
     def on_btn_excluir_clicked(self, button):
         # Função para excluir uma despesa que já está no BD
-        selecao = builder.get_object('treeview_princ').get_selection()
-        selecao.connect("changed", on_tree_selection_changed)
+        print('Vou excluir o objeto ', self.objeto_selecionado)
+        obj_excluir = ListaDespesa(self.banco)
+        obj_excluir.excluir_despesa(self.objeto_selecionado)
+        self.atualizar_tela()
 
     def on_tree_selection_changed(self, selection):
-        # Função para obter os dados selecionados de uma treeview
+        # Essa função é utilizada pelo inicializador para retornar o objeto da Treeview que foi selecionado
         model, treeiter = selection.get_selected()
-        if treeiter is not None:
-            print('Você selecionou', model[treeiter][0])
+        if treeiter != None:
+            print("You selected", model[treeiter][0])
+            objeto = int(model[treeiter][0])
+            print(objeto)
+            self.objeto_selecionado = objeto
 
     def on_btn_zerar_clicked(self):
         # Função para zerar os dados do BD. Útil para iniciar um novo mês com um novo orçamento
